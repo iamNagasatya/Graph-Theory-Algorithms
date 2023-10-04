@@ -11,34 +11,19 @@ const int N = 1e5+1;
 vector<int> gr[N];
 int Par[N], dep[N];
 
-void dfs(int cur, int par, int depth){
+void dfs(int cur, int par){
     Par[cur]=par;
-    dep[cur]=depth;
+    dep[cur]=dep[par]+1;
     for(int x: gr[cur]){
         if(x!=par){
-            dfs(x, cur, depth+1);
+            dfs(x, cur);
         }
     }
 
 }
 
-int main(){
-    ios::sync_with_stdio(false); cin.tie(NULL);
-    #ifndef ONLINE_JUDGE
-        freopen("input.txt", "r", stdin);
-        freopen("output.txt", "w", stdout);
-    #endif
-    int n, m, p, q;
-    cin >> n >> m >> p >> q;
-
-    for(int i=0; i<m; i++){
-        int x, y;
-        cin >> x >> y;
-        gr[x].push_back(y);
-        gr[y].push_back(x);
-    }
-    
-    dfs(1, 0, 0);
+int LCA(int p, int q){
+    if(p==q) return p;
 
     while(dep[p]!=dep[q]){
         if(dep[p]>dep[q]) p = Par[p];
@@ -50,7 +35,28 @@ int main(){
         q = Par[q];
     }
 
-    cout << "LCA :" << p ;
+    return p;
+}
+
+int main(){
+    ios::sync_with_stdio(false); cin.tie(NULL);
+    #ifndef ONLINE_JUDGE
+        freopen("input.txt", "r", stdin);
+        freopen("output.txt", "w", stdout);
+    #endif
+    int n;
+    cin >> n;
+
+    for(int i=1; i<n; i++){
+        int x, y;
+        cin >> x >> y;
+        gr[x].push_back(y);
+        gr[y].push_back(x);
+    }
+    
+    dfs(1, 0);
+
+    cout << LCA(5, 2);
 
     return 0;
 }
